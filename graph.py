@@ -50,7 +50,8 @@ class Graph:
             # memory = [batch_size, seq_len, 2*gru_size=embed_size]
             self.memory, self.encoder_final_state = build_encoder(self.encoder_inputs, is_training=is_training)
             # fusing style embedding into encoder outputs for decoder's attention
-            self.memory += self.style_emb
+            seq_len = tf.shape(self.x)[1]
+            self.memory += tf.tile(tf.expand_dims(self.style_emb, axis=1), [1, seq_len, 1])
 
         with tf.variable_scope("decoder1"):
             # y_hat =  [batch_size, seq_len//r, n_mels*r]

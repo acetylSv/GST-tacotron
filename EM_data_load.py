@@ -73,7 +73,9 @@ def get_batch():
         texts = tf.convert_to_tensor(texts)
 
         # Create Queues
-        fpath, text_length, text = tf.train.slice_input_producer([fpaths, text_lengths, texts], shuffle=True)
+        fpath, text_length, text = tf.train.slice_input_producer(
+                                [fpaths, text_lengths, texts], shuffle=True
+                            )
         
         # Parse
         text = tf.decode_raw(text, tf.int32)  # (None,)

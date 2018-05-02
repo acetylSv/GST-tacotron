@@ -185,5 +185,4 @@ def build_STL(inputs):
                     num_units=hp.multihead_attn_num_unit,
                     attention_type=hp.style_att_type
                 )
-    
     return style_emb, GST

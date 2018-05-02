@@ -35,7 +35,6 @@ def train():
     summary_writer = tf.summary.FileWriter(hp.log_dir, sess.graph)
 
     try:
-        # Initialize the queue threads to start to shovel data
         coord = tf.train.Coordinator()
         threads = tf.train.start_queue_runners(sess=sess, coord=coord)
         
