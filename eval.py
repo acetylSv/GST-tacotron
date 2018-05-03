@@ -11,8 +11,6 @@ from graph import Graph
 def eval():
     # Build graph
     g = Graph(mode='eval'); print("Eval Graph loaded")
-    # force batch_size to be 1
-    hp.batch_size = 1
     # Load data
     fpaths, text_lengths, texts = load_data(mode="eval")
     # Parse

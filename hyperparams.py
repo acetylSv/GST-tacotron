@@ -1,7 +1,9 @@
 class Hyperparams:
     #### Path Info ####
-    log_dir = './tacotron_log'
-    data_path = './data/'
+    log_dir = './tacotron_log_clean_5'
+    data_path = './data/EATMIC_clean'
+    transcript_path = './data/transcription_clean.txt'
+    feat_path = './feat_clean'
     sample_dir = './sample_dir'
     test_data = './harvard_sentences.txt'
 

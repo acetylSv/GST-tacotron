@@ -52,8 +52,7 @@ def attention_decoder(inputs, memory, initial_state, num_units=None):
                             num_units,
                             alignment_history=True
                         )
-    #decoder_initial_state = cell_with_attention.zero_state(dtype=tf.float32, batch_size=tf.shape(inputs)[0])
-    decoder_initial_state = cell_with_attention.zero_state(dtype=tf.float32, batch_size=hp.batch_size)
+    decoder_initial_state = cell_with_attention.zero_state(dtype=tf.float32, batch_size=tf.shape(inputs)[0])
     decoder_initial_state = decoder_initial_state.clone(cell_state=initial_state)
     outputs, state = tf.nn.dynamic_rnn(
                         cell_with_attention,
@@ -266,6 +265,6 @@ def multi_head_attention(query, value, num_heads=8, attention_type='mlp_attentio
         raise ValueError('Only mlp_attention and dot_attention are supported')
 
     # combine each head to one
-    style_emb = tf.reshape(style_emb, [hp.batch_size, hp.token_emb_size])
+    style_emb = tf.reshape(style_emb, [tf.shape(query)[0], hp.token_emb_size])
 
     return style_emb

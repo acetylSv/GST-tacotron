@@ -180,7 +180,7 @@ def build_STL(inputs):
                     # shape = [batch_size, 1, hp.ref_enc_gru_size]
                     tf.expand_dims(inputs, axis=1),
                     # shape = [batch_size, hp.token_num, hp.token_emb_size//hp.num_heads]
-                    tf.tile(tf.expand_dims(GST, axis=0), [hp.batch_size,1,1]),
+                    tf.tile(tf.expand_dims(GST, axis=0), [tf.shape(inputs)[0],1,1]),
                     num_heads=hp.num_heads,
                     num_units=hp.multihead_attn_num_unit,
                     attention_type=hp.style_att_type

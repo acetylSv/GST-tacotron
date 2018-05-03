@@ -27,8 +27,7 @@ def load_data(mode="train"):
     if mode in ("train", "eval"):
         # Parse
         fpaths, text_lengths, texts = [], [], []
-        transcript = os.path.join(hp.data_path, 'transcription_after_EPD.txt')
-        lines = codecs.open(transcript, 'r', 'utf-8').readlines()
+        lines = codecs.open(hp.transcript_path, 'r', 'utf-8').readlines()
         total_hours = 0
         if mode=="train":
             lines = lines[1:]
@@ -39,7 +38,7 @@ def load_data(mode="train"):
             fname = line.strip().split(' ')[1]
             text = ' '.join(line.strip().split(' ')[3:])
             
-            fpath = os.path.join(hp.data_path, "afterEPD", fname + ".wav")
+            fpath = os.path.join(hp.data_path, fname + ".wav")
             fpaths.append(fpath)
 
             text = text_normalize(text) + "E"  # E: EOS
@@ -83,8 +82,8 @@ def get_batch():
         if hp.prepro:
             def _load_spectrograms(fpath):
                 fname = os.path.basename(fpath)
-                mel = "./feat/mels/{}".format(fname.decode('utf-8').replace("wav", "npy"))
-                mag = "./feat/mags/{}".format(fname.decode('utf-8').replace("wav", "npy"))
+                mel = "{}/mels/{}".format(hp.feat_path, fname.decode('utf-8').replace("wav", "npy"))
+                mag = "{}/mags/{}".format(hp.feat_path, fname.decode('utf-8').replace("wav", "npy"))
                 return fname, np.load(mel), np.load(mag)
             fname, mel, mag = tf.py_func(_load_spectrograms, [fpath], [tf.string, tf.float32, tf.float32])
         else:
