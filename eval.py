@@ -5,7 +5,7 @@ import numpy as np
 from network import *
 from hyperparams import Hyperparams as hp
 from utils import *
-from EM_data_load import *
+from data_load import *
 from graph import Graph
 
 def eval():

@@ -1,2 +1,4 @@
 data/
-feat/
+feat*/
+tacotron*/
+__pycache__/

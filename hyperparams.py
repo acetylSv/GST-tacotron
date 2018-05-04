@@ -1,9 +1,9 @@
 class Hyperparams:
     #### Path Info ####
-    log_dir = './tacotron_log_clean_5'
-    data_path = './data/EATMIC_clean'
-    transcript_path = './data/transcription_clean.txt'
-    feat_path = './feat_clean'
+    log_dir = './tacotron_log_LJ_5'
+    data_path = './data/LJ'
+    transcript_path = './data/LJ_metadata.csv'
+    feat_path = './feat_LJ'
     sample_dir = './sample_dir'
     test_data = './harvard_sentences.txt'
 
@@ -12,6 +12,7 @@ class Hyperparams:
 
     #### Data Loading ####
     prepro = True
+    hp.EM_dataset = False
 
     #### Modules ####
     ## tacotron-1

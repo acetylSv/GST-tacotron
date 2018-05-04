@@ -7,7 +7,7 @@ from random import shuffle
 from network import *
 from hyperparams import Hyperparams as hp
 from utils import *
-from EM_data_load import *
+from data_load import *
 
 # Define Graph
 class Graph:
