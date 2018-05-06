@@ -6,7 +6,6 @@ from scipy.io.wavfile import write
 from network import *
 from hyperparams import Hyperparams as hp
 from utils import *
-from data_load import *
 from graph import Graph
 
 def infer():

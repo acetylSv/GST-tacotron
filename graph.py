@@ -7,14 +7,12 @@ from random import shuffle
 from network import *
 from hyperparams import Hyperparams as hp
 from utils import *
-from data_load import *
+#from data_load import *
+from load_tfrecords import *
 
 # Define Graph
 class Graph:
     def __init__(self, mode="train"):
-        # Load vocabulary
-        self.char2idx, self.idx2char = load_vocab()
-
         # Set phase
         is_training=True if mode=="train" else False
         
@@ -23,7 +21,8 @@ class Graph:
         # y: Reduced mel [batch_size, seq_len//r, n_mels*r]
         # x, z: mag [batch_size, seq_len, 1+n_fft//2]
         if mode=='train':
-            self.x, self.y, self.z, self.fnames, self.num_batch = get_batch()
+            #self.x, self.y, self.z, self.fnames, self.num_batch = get_batch()
+            self.x, self.y, self.z, self.fnames, self.num_batch = get_batch(mode)
         elif mode=='infer':
             self.x = tf.placeholder(tf.int32, shape=(None, None))
             self.y = tf.placeholder(tf.float32, shape=(None, None, hp.n_mels*hp.r))

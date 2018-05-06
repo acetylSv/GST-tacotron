@@ -2,7 +2,7 @@
 from utils import load_spectrograms
 from hyperparams import Hyperparams as hp
 import os
-from EM_data_load import load_data
+from data_load import load_data
 import numpy as np
 import tqdm
 

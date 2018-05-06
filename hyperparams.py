@@ -12,7 +12,7 @@ class Hyperparams:
 
     #### Data Loading ####
     prepro = True
-    hp.EM_dataset = False
+    EM_dataset = False
 
     #### Modules ####
     ## tacotron-1
@@ -44,7 +44,7 @@ class Hyperparams:
 
     #### Networks ####
     lr = 0.001
-    batch_size = 32
+    batch_size = 16
     summary_period = 300
     save_period = 1000
     r = 5 # Reduction factor. Paper => 2, 3, 5

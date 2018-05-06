@@ -107,7 +107,7 @@ def get_batch():
                                             batch_size=hp.batch_size,
                                             bucket_boundaries=[i for i in range(minlen + 1, maxlen - 1, 10)],
                                             #bucket_boundaries=[i for i in range(minlen + 1, maxlen - 1, 20)],
-                                            num_threads=16,
+                                            num_threads=32,
                                             capacity=hp.batch_size * 1,
                                             #capacity=hp.batch_size * 4,
                                             dynamic_pad=True)
