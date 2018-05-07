@@ -114,13 +114,13 @@ def learning_rate_decay(init_lr, global_step, warmup_steps=4000.):
     step = tf.cast(global_step + 1, dtype=tf.float32)
     return init_lr * warmup_steps ** 0.5 * tf.minimum(step * warmup_steps ** -1.5, step ** -0.5)
 
-def plot_alignment(alignment, gs, mode):
+def plot_alignment(alignment, gs, idx, mode):
     fig, ax = plt.subplots()
     im = ax.imshow(alignment)
     # cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
     fig.colorbar(im)
     plt.title('{} Steps'.format(gs))
-    plt.savefig('{}/alignment_{}_{}.png'.format(hp.log_dir, mode, gs), format='png')
+    plt.savefig('{}/alignment_{}_{}_{}.png'.format(hp.log_dir, mode, idx, gs), format='png')
 
 def my_shuffle(*args):
     randomize = np.arange(len(args[0]))

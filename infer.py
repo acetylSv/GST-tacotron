@@ -7,12 +7,17 @@ from network import *
 from hyperparams import Hyperparams as hp
 from utils import *
 from graph import Graph
+import make_tfrecords
 
 def infer():
     # Build graph
     g = Graph(mode='infer'); print("Infer Graph loaded")
-    # Load data
-    texts = load_data(mode="infer")
+    # Load text data
+    texts = make_tfrecords.eval_infer_load_data(mode="infer")
+    # Load ref audio data
+    _, mel, _ = load_spectrograms(sys.argv[1])
+    ## ref_mel = [texts.shape[0], seq_len//hp.r, hp.n_mels]
+    ref_mel = np.tile(np.expand_dims(mel, 0), (texts.shape[0], 1, 1))
 
     # Saver
     saver = tf.train.Saver(max_to_keep = 5)
@@ -28,20 +33,20 @@ def infer():
         print("=====Reading model error=====")
         exit()
 
-    # Feed Forward
-    ## mel
-    y_hat = np.zeros((texts.shape[0], 200, hp.n_mels*hp.r), np.float32)  # hp.n_mels*hp.r
+    ## get style emb
+    style_emb = sess.run(g.style_emb, {g.y:ref_mel})
+    ## get mel
+    y_hat = np.zeros((texts.shape[0], 200, hp.n_mels*hp.r), np.float32)
     for j in range(200):
-        _y_hat = sess.run(g.y_hat, {g.x: texts, g.y: y_hat})
+        _y_hat = sess.run(g.y_hat, {g.x: texts, g.y: y_hat, g.style_emb:style_emb})
         y_hat[:, j, :] = _y_hat[:, j, :]
-    ## mag
+    ## get mag
     mags, al = sess.run([g.z_hat, g.alignments], {g.x: texts, g.y:y_hat, g.y_hat:y_hat})
-
     for i, mag in enumerate(mags):
         print("File {}.wav is being generated ...".format(i+1))
         audio = spectrogram2wav(mag)
         write(os.path.join(hp.sample_dir, '{}.wav'.format(i+1)), hp.sr, audio)
-        plot_alignment(al[i], gs, mode='infer')
+        plot_alignment(al[i], gs, i, mode='infer')
 
     # exit
     sess.close()

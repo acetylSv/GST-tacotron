@@ -265,6 +265,7 @@ def multi_head_attention(query, value, num_heads=8, attention_type='mlp_attentio
         raise ValueError('Only mlp_attention and dot_attention are supported')
 
     # combine each head to one
+    ## or pass through a linear?
     style_emb = tf.reshape(style_emb, [tf.shape(query)[0], hp.token_emb_size])
 
     return style_emb

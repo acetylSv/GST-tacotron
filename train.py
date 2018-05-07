@@ -36,18 +36,13 @@ def train():
     try:
         coord = tf.train.Coordinator()
         threads = tf.train.start_queue_runners(sess=sess, coord=coord)
-        #import time
-        #tS = time.time()
         while True:
             for _ in range(g.num_batch):
                 if coord.should_stop():
                     break
                 _, loss, gs = sess.run([g.train_op, g.loss, g.global_step])
                 print('===GS:  %s, loss:  %lf===' % (str(gs), loss))
-                #if gs == 80:
-                #    tE = time.time()
-                #    print("It cost %f sec" % (tE - tS))
-                #    exit()
+                
                 if(gs % hp.summary_period == 0):
                     summary_str, al = sess.run([g.summary_op, g.alignments])
                     # add summ

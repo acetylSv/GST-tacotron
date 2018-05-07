@@ -7,7 +7,6 @@ from random import shuffle
 from network import *
 from hyperparams import Hyperparams as hp
 from utils import *
-#from data_load import *
 from load_tfrecords import *
 
 # Define Graph
@@ -21,7 +20,6 @@ class Graph:
         # y: Reduced mel [batch_size, seq_len//r, n_mels*r]
         # x, z: mag [batch_size, seq_len, 1+n_fft//2]
         if mode=='train':
-            #self.x, self.y, self.z, self.fnames, self.num_batch = get_batch()
             self.x, self.y, self.z, self.fnames, self.num_batch = get_batch(mode)
         elif mode=='infer':
             self.x = tf.placeholder(tf.int32, shape=(None, None))
@@ -47,7 +45,10 @@ class Graph:
 
         with tf.variable_scope("encoder"):
             # memory = [batch_size, seq_len, 2*gru_size=embed_size]
-            self.memory, self.encoder_final_state = build_encoder(self.encoder_inputs, is_training=is_training)
+            self.memory, self.encoder_final_state = build_encoder(
+                                    self.encoder_inputs,
+                                    is_training=is_training
+                                )
             # fusing style embedding into encoder outputs for decoder's attention
             seq_len = tf.shape(self.x)[1]
             self.memory += tf.tile(tf.expand_dims(self.style_emb, axis=1), [1, seq_len, 1])

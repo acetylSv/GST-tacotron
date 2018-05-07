@@ -5,13 +5,12 @@ class Hyperparams:
     transcript_path = './data/LJ_metadata.csv'
     feat_path = './feat_LJ'
     sample_dir = './sample_dir'
-    test_data = './harvard_sentences.txt'
+    infer_data_path = './harvard_sentences.txt'
 
     #### Char-set ####
     char_set = "PE abcdefghijklmnopqrstuvwxyz'.?" # P for padding, E for eos
 
     #### Data Loading ####
-    prepro = True
     EM_dataset = False
 
     #### Modules ####

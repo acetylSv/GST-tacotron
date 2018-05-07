@@ -55,16 +55,13 @@ def make_tfrecords(mode):
     # write TFRecords Object
     writer = tf.python_io.TFRecordWriter(output_filepath)
     
-    # Load vocabulary
+    # load vocabulary
     char2idx, idx2char = load_vocab()
 
-    # Parse
+    # parse
     lines = codecs.open(hp.transcript_path, 'r', 'utf-8').readlines()
-    if mode=="train":
-        lines = lines[32:]
-    else:
-        lines = lines[:31]
-
+    # preserving first batch for evaluation
+    lines = lines[hp.batch_size:]
     for line in lines:
         if hp.EM_dataset:
             # EM dataset parsing
@@ -82,15 +79,49 @@ def make_tfrecords(mode):
     writer.close()
     return
 
+def eval_infer_load_data(mode):
+    # load vocabulary
+    char2idx, idx2char = load_vocab()
+    
+    # for eval
+    if mode == 'eval':
+        # parse
+        lines = codecs.open(hp.transcript_path, 'r', 'utf-8').readlines()
+        # take the batch as eval
+        lines = lines[:hp.batch_size]
+        fpaths, text_lengths, texts = [], [], []
+        for line in lines:
+            if hp.EM_dataset:
+                # EM dataset parsing
+                fname = line.strip().split(' ')[1]
+                text = ' '.join(line.strip().split(' ')[3:])
+            else:
+                # LJ dataset parsing
+                fname, _, text = line.strip().split('|')
+            fpath = os.path.join(hp.data_path, fname + ".wav")
+            text = text_normalize(text) + "E"  # E: EOS
+            text = [char2idx[char] for char in text]
+            fpaths.append(fpath)
+            text_lengths.append(len(text))
+            texts.append(text)
+        return fpaths, text_lengths, texts
+
+    # for infer
+    else:
+        # text
+        lines = codecs.open(hp.infer_data_path, 'r', 'utf-8').readlines()[1:]
+        sents = [text_normalize(line.split(" ", 1)[-1]).strip() + "E" for line in lines]
+        lengths = [len(sent) for sent in sents]
+        maxlen = sorted(lengths, reverse=True)[0]
+        texts = np.zeros((len(sents), maxlen), np.int32)
+        for i, sent in enumerate(sents):
+            texts[i, :len(sent)] = [char2idx[char] for char in sent]
+        return texts
+
 def main():
     # extract training feat
     mode = 'train'
     make_tfrecords(mode)
-    
-    # extract eval feat
-    mode = 'eval'
-    make_tfrecords(mode)
-    return
 
 if __name__ == '__main__':
     main()
