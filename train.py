@@ -48,7 +48,7 @@ def train():
                     # add summ
                     summary_writer.add_summary(summary_str, gs)
                     # plot alignment
-                    plot_alignment(al[0], gs, mode='train')
+                    plot_alignment(al[0], gs, 0, mode='train')
 
                 if(gs % hp.save_period == 0):
                     saver.save(sess, os.path.join(hp.log_dir, 'model.ckpt'), global_step=gs)

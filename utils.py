@@ -7,12 +7,7 @@ mpl.use('Agg')
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import librosa
-import soundfile as sf
-import h5py
 from copy import deepcopy
-import pyworld as pw
-import pysptk
-from pysptk.synthesis import LMADF, MLSADF, Synthesizer
 
 from hyperparams import Hyperparams as hp
 

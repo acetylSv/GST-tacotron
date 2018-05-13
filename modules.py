@@ -254,6 +254,7 @@ def multi_head_attention(query, value, num_heads=8, attention_type='mlp_attentio
         raise ValueError("Multi head attention requires that num_units is a multiple of {}".format(num_heads))
 
     q = tf.layers.conv1d(query, num_units, 1)
+    ### maybe duplicate value num_heads times is enough
     k = tf.layers.conv1d(value, num_units, 1)
     v = value
     qs, ks, vs = _split_heads(q, k, v)
@@ -265,7 +266,7 @@ def multi_head_attention(query, value, num_heads=8, attention_type='mlp_attentio
         raise ValueError('Only mlp_attention and dot_attention are supported')
 
     # combine each head to one
-    ## or pass through a linear?
+    ### or pass through a linear?
     style_emb = tf.reshape(style_emb, [tf.shape(query)[0], hp.token_emb_size])
 
     return style_emb
