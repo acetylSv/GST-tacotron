@@ -1,9 +1,10 @@
 class Hyperparams:
     #### Path Info ####
-    log_dir = './tacotron_log_LJ_5'
-    data_path = './data/LJ'
-    transcript_path = './data/LJ_metadata.csv'
-    feat_path = './feat_LJ'
+    #log_dir = './tacotron_log_LJ_5_16_480K_converge'
+    log_dir = './tacotron_log_BZ_5_16'
+    data_path = './data/Blizzard_2013'
+    transcript_path = './data/transcription_blizzard2013.txt'
+    feat_path = './feat_BZ'
     sample_dir = './sample_dir'
     infer_data_path = './harvard_sentences.txt'
 

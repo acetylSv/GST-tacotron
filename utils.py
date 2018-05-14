@@ -25,7 +25,6 @@ def get_spectrograms(fpath):
     y, sr = librosa.load(fpath, sr=hp.sr)
 
     # Trimming
-    a = len(y)
     if hp.is_trimming:
         y, _ = librosa.effects.trim(y)
 

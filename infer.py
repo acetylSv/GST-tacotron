@@ -33,20 +33,28 @@ def infer():
         print("=====Reading model error=====")
         exit()
 
-    ## get style emb
-    style_emb = sess.run(g.style_emb, {g.y:ref_mel})
-    ## get mel
-    y_hat = np.zeros((texts.shape[0], 200, hp.n_mels*hp.r), np.float32)
-    for j in range(200):
-        _y_hat = sess.run(g.y_hat, {g.x: texts, g.y: y_hat, g.style_emb:style_emb})
-        y_hat[:, j, :] = _y_hat[:, j, :]
-    ## get mag
-    mags, al = sess.run([g.z_hat, g.alignments], {g.x: texts, g.y:y_hat, g.y_hat:y_hat})
-    for i, mag in enumerate(mags):
-        print("File {}.wav is being generated ...".format(i+1))
-        audio = spectrogram2wav(mag)
-        write(os.path.join(hp.sample_dir, '{}.wav'.format(i+1)), hp.sr, audio)
-        plot_alignment(al[i], gs, i, mode='infer')
+    ## get style emb and GST
+    style_emb, GST = sess.run([g.style_emb, g.GST], {g.y:ref_mel})
+    GST = np.tile(GST, (1,8))
+    ## pass style emb or self-defined GST weighted sum
+    for idx in range(10):
+        scale = np.zeros(hp.token_emb_size)
+        scale[:] = 0.3
+        style_emb = GST[idx] * scale
+        style_emb = np.tile(style_emb, (texts.shape[0], 1))
+        
+        ## get mel
+        y_hat = np.zeros((texts.shape[0], 200, hp.n_mels*hp.r), np.float32)
+        for j in range(200):
+            _y_hat = sess.run(g.y_hat, {g.x: texts, g.y: y_hat, g.style_emb:style_emb})
+            y_hat[:, j, :] = _y_hat[:, j, :]
+        ## get mag
+        mags, al = sess.run([g.z_hat, g.alignments], {g.x: texts, g.y:y_hat, g.y_hat:y_hat})
+        for i, mag in enumerate(mags):
+            print("File {}_{}.wav is being generated ...".format(i+1, idx))
+            audio = spectrogram2wav(mag)
+            write(os.path.join(hp.sample_dir, '{}_{}.wav'.format(i+1, idx)), hp.sr, audio)
+            plot_alignment(al[i], gs, i, mode='infer')
 
     # exit
     sess.close()
