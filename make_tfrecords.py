@@ -83,14 +83,8 @@ def eval_infer_load_data(mode):
         lines = lines[:hp.batch_size]
         fpaths, text_lengths, texts = [], [], []
         for line in lines:
-            if hp.EM_dataset:
-                # EM dataset parsing
-                fname = line.strip().split(' ')[1]
-                text = ' '.join(line.strip().split(' ')[3:])
-            else:
-                # LJ dataset parsing
-                fname, _, text = line.strip().split('|')
-            fpath = os.path.join(hp.data_path, fname + ".wav")
+            fdir, fname, text = line.strip().split('|')
+            fpath = os.path.join(hp.data_path, fdir, fname)
             text = text_normalize(text) + "E"  # E: EOS
             text = [char2idx[char] for char in text]
             fpaths.append(fpath)
