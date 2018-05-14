@@ -2,7 +2,7 @@ class Hyperparams:
     #### Path Info ####
     #log_dir = './tacotron_log_LJ_5_16_480K_converge'
     log_dir = './tacotron_log_BZ_5_16'
-    data_path = './data/Blizzard_2013'
+    data_path = './data'
     transcript_path = './data/transcription_blizzard2013.txt'
     feat_path = './feat_BZ'
     sample_dir = './sample_dir'
@@ -12,7 +12,7 @@ class Hyperparams:
     char_set = "PE abcdefghijklmnopqrstuvwxyz'.?" # P for padding, E for eos
 
     #### Data Loading ####
-    EM_dataset = False
+    tfrecords_partition = 100
 
     #### Modules ####
     ## tacotron-1

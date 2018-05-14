@@ -46,15 +46,6 @@ def make_tfrecords(mode):
     if not os.path.exists(hp.feat_path):
         os.makedirs(hp.feat_path)
     
-    output_filepath = os.path.join(hp.feat_path, mode + '.tfrecords')
-    # check file
-    if os.path.exists(output_filepath):
-        print('=====Tfrecords %s exists, nothing new written=====' % output_filepath)
-        return
-
-    # write TFRecords Object
-    writer = tf.python_io.TFRecordWriter(output_filepath)
-    
     # load vocabulary
     char2idx, idx2char = load_vocab()
 
@@ -62,21 +53,22 @@ def make_tfrecords(mode):
     lines = codecs.open(hp.transcript_path, 'r', 'utf-8').readlines()
     # preserving first batch for evaluation
     lines = lines[hp.batch_size:]
-    for line in lines:
-        if hp.EM_dataset:
-            # EM dataset parsing
-            fname = line.strip().split(' ')[1]
-            text = ' '.join(line.strip().split(' ')[3:])
-        else:
-            # LJ dataset parsing
-            fname, _, text = line.strip().split('|')
-        fpath = os.path.join(hp.data_path, fname + ".wav")
-        text = text_normalize(text) + "E"  # E: EOS
-        text = [char2idx[char] for char in text]
-
-        encode_and_write(writer, fpath, text)
-
-    writer.close()
+    # split tfrecords into small partitions for globally shuffle
+    size = len(lines) // hp.tfrecords_partition
+    lines_split = [lines[i:i+size] for i in range(0, len(lines), size)]
+    for part_idx, lines in enumerate(lines_split):
+        # write TFRecords Object
+        output_filepath = os.path.join(hp.feat_path,
+                    '{}_{}.tfrecords'.format(mode, str(part_idx).zfill(4))
+                )
+        writer = tf.python_io.TFRecordWriter(output_filepath)
+        for line in lines:
+            fdir, fname, text = line.strip().split('|')
+            fpath = os.path.join(hp.data_path, fdir, fname)
+            text = text_normalize(text) + "E"  # E: EOS
+            text = [char2idx[char] for char in text]
+            encode_and_write(writer, fpath, text)
+        writer.close()
     return
 
 def eval_infer_load_data(mode):
@@ -108,7 +100,6 @@ def eval_infer_load_data(mode):
 
     # for infer
     else:
-        # text
         lines = codecs.open(hp.infer_data_path, 'r', 'utf-8').readlines()[1:]
         sents = [text_normalize(line.split(" ", 1)[-1]).strip() + "E" for line in lines]
         lengths = [len(sent) for sent in sents]

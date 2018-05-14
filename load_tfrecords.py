@@ -34,17 +34,19 @@ def read_and_decode(filename_queue):
 def get_batch(mode):
     def _get_max_min_len():
         lines = codecs.open(hp.transcript_path, 'r', 'utf-8').readlines()
-        if hp.EM_dataset:
-            # EM dataset parsing
-            text_lengths = [len(' '.join(line.strip().split(' ')[3:])) for line in lines]
-        else:
-            # LJ dataset parsing
-            text_lengths = [len(line.strip().split('|')[-1]) for line in lines]
+        text_lengths = [len(line.strip().split('|')[2]) for line in lines]
         return max(text_lengths), min(text_lengths), len(text_lengths) // hp.batch_size
 
     # create queue
-    filename_queue = tf.train.string_input_producer([os.path.join(hp.feat_path, mode+'.tfrecords')])
-    get_mel, get_mag, get_wav_filename, get_text_length, get_text = read_and_decode(filename_queue)
+    def _get_path(mode, part_idx):
+        return os.path.join(hp.feat_path,'{}_{}.tfrecords'.format(mode, str(part_idx).zfill(4)))
+    tfrecords_path = [_get_path(mode, part_idx) for part_idx in range(hp.tfrecords_partition)]
+    filename_queue = tf.train.string_input_producer(
+                            tfrecords_path,
+                            shuffle=True
+                    )
+    get_mel, get_mag, get_wav_filename,\
+            get_text_length, get_text = read_and_decode(filename_queue)
     maxlen, minlen, num_batch = _get_max_min_len()
     
     # Batching
@@ -58,5 +60,4 @@ def get_batch(mode):
                 capacity=hp.batch_size * 4,
                 dynamic_pad=True
              )
-            #16, 4 = 142secs 32, 8 = 138secs, 16, 1 = 135secs
     return texts, mels, mags, wav_filenames, num_batch
