@@ -55,6 +55,7 @@ class Graph:
 
         with tf.variable_scope("decoder1"):
             # y_hat =  [batch_size, seq_len//r, n_mels*r]
+            # alignment =  [batch_size, encoder_timesteps, decoder_timesteps]
             self.y_hat, self.alignments = build_decoder1(
                     self.decoder_inputs, self.memory, self.encoder_final_state, is_training=is_training
                 )
@@ -79,14 +80,28 @@ class Graph:
             # monitor
             self.audio_hat = tf.py_func(spectrogram2wav, [self.z_hat[0]], tf.float32)
             self.audio_gt = tf.py_func(spectrogram2wav, [self.z[0]], tf.float32)
+
             # Loss
+            ## mel loss
             self.loss1 = tf.reduce_mean(tf.abs(self.y_hat - self.y))
+            ## mag loss
             self.loss2 = tf.reduce_mean(tf.abs(self.z_hat - self.z))
-            self.loss = self.loss1 + self.loss2
+            ## guided attention
+            batch_size, N, T = tf.shape(self.alignments)[0], tf.shape(self.alignments)[1], tf.shape(self.alignments)[2]
+            g = 0.2
+            Ns = tf.tile(tf.expand_dims(tf.range(N)/N, 1), [1, T]) # shape: [N, T]
+            Ts = tf.tile(tf.expand_dims(tf.range(T)/T, 0), [N, 1]) # shape: [N, T]
+            W = tf.ones([N, T]) - tf.exp(-1*(tf.cast(tf.square(Ns - Ts), tf.float32) / (2*tf.square(g))))
+            nearly_diagonal_constraint = tf.multiply(self.alignments, tf.tile(tf.expand_dims(W, 0), [batch_size, 1, 1]))
+            self.guided_attn_loss = tf.reduce_mean(nearly_diagonal_constraint)
+            ## total loss
+            self.loss = self.loss1 + self.loss2 + self.guided_attn_loss
+            
             # Training Scheme
             self.global_step = tf.Variable(0, name='global_step', trainable=False)
             self.lr = learning_rate_decay(hp.lr, global_step=self.global_step)
             self.optimizer = tf.train.AdamOptimizer(learning_rate=self.lr)
+            
             # gradient clipping
             self.gvs = self.optimizer.compute_gradients(self.loss)
             self.clipped = []
@@ -97,9 +112,11 @@ class Graph:
                                 self.clipped,
                                 global_step=self.global_step
                             )
+
             # Summary
             tf.summary.scalar('{}/loss1'.format(mode), self.loss1)
             tf.summary.scalar('{}/loss2'.format(mode), self.loss2)
+            tf.summary.scalar('{}/guided_attn_loss'.format(mode), self.guided_attn_loss)
             tf.summary.scalar('{}/loss'.format(mode), self.loss)
             tf.summary.scalar('{}/lr'.format(mode), self.lr)
             tf.summary.image("{}/mel_gt".format(mode),

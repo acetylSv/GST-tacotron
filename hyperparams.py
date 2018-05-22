@@ -1,7 +1,6 @@
 class Hyperparams:
     #### Path Info ####
-    #log_dir = './tacotron_log_LJ_5_16_480K_converge'
-    log_dir = './tacotron_log_BZ_max300_5_16'
+    log_dir = './tacotron_log_BZ_max300_5_16_guided'
     data_path = './data'
     transcript_path = './data/transcription_blizzard2013_max300.txt'
     feat_path = './feat_BZ_max300'
