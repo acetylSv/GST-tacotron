@@ -10,9 +10,17 @@ Style Tokens: Unsupervised Style Modeling, Control and Transfer in End-to-End Sp
 ## Steps and Usages
 1. Data Preprocess:
     - Prepare wavs and transcription
-    - Set path informations in hyperparams.py
+    - Example format:
+<pre><code>Blizzard_2013|CA-MP3-17-138.wav|End of Mansfield Park by Jane Austin.
+Blizzard_2013|CA-MP3-17-139.wav|Performed by Catherine Byers.
+...</code></pre>
 2. Make TFrecords for faster data loading:
-    - Check path, partition informations in hyperparams.py
+    - Check parameters in hyperparams.py
+        - path informations
+        - TFrecords partition number
+        - sample_rate
+        - fft points, hop length, window length
+        - mel-filter banks number
     - Run:
 <pre><code>python3 make_tfrecords.py</code></pre>
 3. Train the whole network:
@@ -28,8 +36,10 @@ Style Tokens: Unsupervised Style Modeling, Control and Transfer in End-to-End Sp
     - Check Inference input text in hyperparams.py
     - Pass reference audio path as argument
     - Reference audio: an arbitary .wav file
+    - Directly condition on combination of GSTs is now undergoing, set below flag in infer.py <code>condition_on_audio = False</code> and set the combination weight you like
     - Run:
-<pre><code>python3 infer.py [ref_audio_path]</code></pre>
+<pre><code>python3 infer.py [ref_audio_path]
+</code></pre>
 
 ## Notes
 At experiments 6-1 and 6-2, paper points out that one could SELECT some tokens, scale it and then feed this style embedding into text encoder. But at section 3.2.2, multi-head attention is used and each token is set to be 256/h dim. 

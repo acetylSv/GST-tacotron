@@ -16,9 +16,9 @@ class Graph:
         is_training=True if mode=="train" else False
         
         # Input, Output Placeholder
-        # x: int seq. [batch_size, seq_len]
-        # y: Reduced mel [batch_size, seq_len//r, n_mels*r]
-        # x, z: mag [batch_size, seq_len, 1+n_fft//2]
+        # x: int text seq [batch_size, seq_len]
+        # y: reduced mel  [batch_size, seq_len//r, n_mels*r]
+        # z: mag          [batch_size, seq_len, 1+n_fft//2]
         if mode=='train':
             self.x, self.y, self.z, self.fnames, self.num_batch = get_batch(mode)
         elif mode=='infer':

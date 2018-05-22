@@ -1,10 +1,10 @@
 class Hyperparams:
     #### Path Info ####
     #log_dir = './tacotron_log_LJ_5_16_480K_converge'
-    log_dir = './tacotron_log_BZ_5_16'
+    log_dir = './tacotron_log_BZ_max300_5_16'
     data_path = './data'
-    transcript_path = './data/transcription_blizzard2013.txt'
-    feat_path = './feat_BZ'
+    transcript_path = './data/transcription_blizzard2013_max300.txt'
+    feat_path = './feat_BZ_max300'
     sample_dir = './sample_dir'
     infer_data_path = './harvard_sentences.txt'
 
@@ -51,15 +51,15 @@ class Hyperparams:
 
     #### Signal Processing ####
     is_trimming = True
-    sr = 22050 # Sample rate.
-    n_fft = 2048 # fft points (samples)
+    sr = 16000 # Sample rate.
+    n_fft = 1024 # fft points (samples)
     frame_shift = 0.0125 # seconds
     frame_length = 0.05 # seconds
     hop_length = int(sr*frame_shift) # samples.
     win_length = int(sr*frame_length) # samples.
     n_mels = 80 # Number of Mel banks to generate
     power = 1.2 # Exponent for amplifying the predicted magnitude
-    n_iter = 500 # Number of inversion iterations
+    n_iter = 200 # Number of inversion iterations
     preemphasis = .97 # or None
     max_db = 100
     ref_db = 20
