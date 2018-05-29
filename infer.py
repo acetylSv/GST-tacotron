@@ -9,7 +9,7 @@ from utils import *
 from graph import Graph
 import make_tfrecords
 
-def get_mel_and_mag(texts, style_emb):
+def get_mel_and_mag(sess, texts, style_emb):
     # get mel
     y_hat = np.zeros((texts.shape[0], 200, hp.n_mels*hp.r), np.float32)
     for j in range(200):
@@ -46,7 +46,7 @@ def infer():
         # ref_mel = [texts.shape[0], seq_len//hp.r, hp.n_mels]
         ref_mel = np.tile(np.expand_dims(mel, 0), (texts.shape[0], 1, 1))
         style_emb = sess.run(g.style_emb, {g.y:ref_mel})
-        _, mags, al = get_mel_and_mag(texts, style_emb)
+        _, mags, al = get_mel_and_mag(sess, texts, style_emb)
         for i, mag in enumerate(mags):
             print("File {}_{}.wav is being generated ...".format(sys.argv[1].replace('.wav', ''), i+1))
             audio = spectrogram2wav(mag)
@@ -61,7 +61,7 @@ def infer():
             scale[:] = 0.3
             style_emb = GST[idx] * scale
             style_emb = np.tile(style_emb, (texts.shape[0], 1))
-            _, mags, al = get_mel_and_mag(texts, style_emb)
+            _, mags, al = get_mel_and_mag(sess, texts, style_emb)
             for i, mag in enumerate(mags):
                 print("File {}_{}.wav is being generated ...".format(idx, i+1))
                 audio = spectrogram2wav(mag)

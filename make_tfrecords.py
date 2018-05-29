@@ -94,7 +94,7 @@ def eval_infer_load_data(mode):
 
     # for infer
     else:
-        lines = codecs.open(hp.infer_data_path, 'r', 'utf-8').readlines()[1:]
+        lines = codecs.open(hp.infer_data_path, 'r', 'utf-8').readlines()
         sents = [text_normalize(line.split(" ", 1)[-1]).strip() + "E" for line in lines]
         lengths = [len(sent) for sent in sents]
         maxlen = sorted(lengths, reverse=True)[0]
