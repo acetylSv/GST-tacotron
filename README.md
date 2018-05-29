@@ -39,7 +39,7 @@ Blizzard_2013|CA-MP3-17-139.wav|Performed by Catherine Byers.
     - Directly condition on combination of GSTs is now undergoing, set below flag in infer.py <code>condition_on_audio = False</code> and set the combination weight you like
     - Run:
 <pre><code>python3 infer.py [ref_audio_path]</code></pre>
-    - Inference input text example format:
+6. Inference input text example format:
 <pre><code>0. Welcome to N. T. U. speech lab
 1. Recognize speech
 2. Wreck a nice beach
