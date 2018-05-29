@@ -34,17 +34,16 @@ Blizzard_2013|CA-MP3-17-139.wav|Performed by Catherine Byers.
 <pre><code>python3 eval.py</code></pre>
 5. Inference:
     - Check Inference input text in hyperparams.py
-    - Example format:
-<pre><code>0. Welcome to N. T. U. speech lab
-1. Recognize speech
-2. Wreck a nice beach
-...</code></pre>
     - Pass reference audio path as argument
     - Reference audio: an arbitary .wav file
     - Directly condition on combination of GSTs is now undergoing, set below flag in infer.py <code>condition_on_audio = False</code> and set the combination weight you like
     - Run:
-<pre><code>python3 infer.py [ref_audio_path]
-</code></pre>
+<pre><code>python3 infer.py [ref_audio_path]</code></pre>
+    - Inference input text example format:
+<pre><code>0. Welcome to N. T. U. speech lab
+1. Recognize speech
+2. Wreck a nice beach
+...</code></pre>
 
 ## Notes
 1. At experiments 6-1 and 6-2, paper points out that one could SELECT some tokens, scale it and then feed this style embedding into text encoder. But at section 3.2.2, multi-head attention is used and each token is set to be 256/h dim. 
