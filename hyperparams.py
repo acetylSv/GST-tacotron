@@ -47,6 +47,7 @@ class Hyperparams:
     summary_period = 300
     save_period = 1000
     r = 5 # Reduction factor. Paper => 2, 3, 5
+    guided_attn = False
 
     #### Signal Processing ####
     is_trimming = True

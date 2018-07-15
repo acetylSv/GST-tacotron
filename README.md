@@ -7,6 +7,16 @@ Style Tokens: Unsupervised Style Modeling, Control and Transfer in End-to-End Sp
     Python:      '3.5.2'
     numpy:       '1.13.1'
     tensorflow:  '1.4'
+    
+## Samples
+Samples could be found [here](./samples), where two kind of experiments were conducted:
+1. Conditioning on reference audio:
+    * BZ_440K.wav is an inference result from model trained on Blizzard2013 for 440K steps (batch_size=16), the conditioned referecne audio is picked from its testing set.
+    * LJ_448K.wav is another inference result from model trained on LJ_Speech for 448K steps (batch_size=16), the conditioned referecne audio is also picked from its testing set.
+2. Combinations of GSTs:
+    * normal.wav and slow.wav are two inference results from model trained on LJ_Speech, the difference between the two is by picking difference style tokens for style embedding.
+    * high.wav and low.wav is another pair of example.
+
 ## Steps and Usages
 1. Data Preprocess:
     - Prepare wavs and transcription

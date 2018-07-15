@@ -55,7 +55,7 @@ def infer():
     else:
         GST = sess.run(g.GST)
         # how to pass to multi-head attention?
-        GST = np.tile(GST, (1,8))
+        GST = np.tile(GST, (1, hp.token_num))
         for idx in range(10):
             scale = np.zeros(hp.token_emb_size)
             scale[:] = 0.3
