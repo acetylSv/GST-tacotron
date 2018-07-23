@@ -8,7 +8,7 @@ Style Tokens: Unsupervised Style Modeling, Control and Transfer in End-to-End Sp
     numpy:       '1.13.1'
     tensorflow:  '1.4'
     
-## Samples
+## Samples and Pretrained Models
 Samples could be found [here](./samples), where two kind of experiments were conducted:
 1. Conditioning on reference audio:
     * BZ_440K.wav is an inference result from model trained on Blizzard2013 for 440K steps (batch_size=16), the conditioned referecne audio is picked from its testing set.
@@ -16,6 +16,15 @@ Samples could be found [here](./samples), where two kind of experiments were con
 2. Combinations of GSTs:
     * normal.wav and slow.wav are two inference results from model trained on LJ_Speech, the difference between the two is by picking difference style tokens for style embedding.
     * high.wav and low.wav is another pair of example.
+Pretrained models on both datasets could be downloaded [here](http://speech.ee.ntu.edu.tw/~acetylsv/pretrained_model.zip).
+Download pretrained models and set path in hyperparams.py, then you can use infer.py to generate speech.
+<strong>Note that the detailed settings are different and listed below:</strong>
+1. pretrained_model_BZ:
+	* n_fft:1024
+	* sample_rate: 16000
+2. pretrained_model_LJ:
+	* n_fft:2048
+	* sample_rate: 22050
 
 ## Steps and Usages
 1. Data Preprocess:
