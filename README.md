@@ -16,6 +16,7 @@ Samples could be found [here](./samples), where two kind of experiments were con
 2. Combinations of GSTs:
     * normal.wav and slow.wav are two inference results from model trained on LJ_Speech, the difference between the two is by picking difference style tokens for style embedding.
     * high.wav and low.wav is another pair of example.
+
 Pretrained models on both datasets could be downloaded [here](http://speech.ee.ntu.edu.tw/~acetylsv/pretrained_model.zip).
 Download pretrained models and set path in hyperparams.py, then you can use infer.py to generate speech.
 <strong>Note that the detailed settings are different and listed below:</strong>
