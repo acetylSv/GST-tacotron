@@ -18,7 +18,7 @@ Samples could be found [here](./samples), where two kind of experiments were con
     * high.wav and low.wav is another pair of example.
 
 Pretrained models on both datasets could be downloaded [here](http://speech.ee.ntu.edu.tw/~acetylsv/pretrained_model.zip).
-Download pretrained models and set path in hyperparams.py, then you can use infer.py to generate speech.
+(md5sum:f50940f500c35457cb3d8f8d041240fe)
 <strong>Note that the detailed settings are different and listed below:</strong>
 1. pretrained_model_BZ:
 	* n_fft:1024
